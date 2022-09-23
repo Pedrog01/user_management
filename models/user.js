@@ -15,7 +15,7 @@ class User {
 
     }
 
-    get id(){
+    get id() {
         return this._id;
     }
 
@@ -55,72 +55,96 @@ class User {
         this._photo = value;
     }
 
-    loadFromJSON(json){
+    loadFromJSON(json) {
 
-        for (let name in json){
+        for (let name in json) {
 
-            switch(name){
-
-                case'_register':
-                this[name] = new Date(json[name])
+            switch(name) {
+                case '_register':
+                    this[name] = new Date(json[name])
                 break;
-
                 default:
-                    this[name] = json[name]; 
+                    this[name] = json[name];
 
             }
+
         }
+
     }
 
-
-    static getUsersStorage(){
-
+    static getUsersStorage () {
 
         let users = [];
 
-        if(localStorage.getItem("users")){
+        if (localStorage.getItem("users")) {
 
             users = JSON.parse(localStorage.getItem("users"));
+
         }
-            return users;
+
+        return users
 
     }
 
-    getNewID(){
+    getNewID() {
 
-        if(!window.id) window.id = 0;
+        let usersID = parseInt(localStorage.getItem("userID"));
 
-        id++;
+        if (usersID) window.id = 0;
 
-        return  id;
+        usersID++;
+
+        localStorage.setItem("usersID", usersID);
+
+        return usersID;
 
     }
 
-save(){
+    save() {
 
-    let users = User.getUsersStorage();
+        let users = User.getUsersStorage();
 
-    if(this.id > 0){
+        if (this.id > 0) {
 
-        users.map(u=> {
+            users.map(u => {
 
-           if (u._id == this._id) {
+                if (u._id == this._id) {
 
                     Object.assign(u, this)
 
                 }
-            return u;
-        });
 
-    }else {
+                return u;
 
-        this._id = this.getNewID();
+            });
 
-        users.push(this);
+        } else {
+
+            this._id = this.getNewID();
+
+            users.push(this);
+        }
+
+        localStorage.setItem("users", JSON.stringify(users));
 
     }
 
-    localStorage.setItem("users",JSON.stringify(users));
-}
+    remove() {
+
+        let users = User.getUsersStorage();
+
+        users.forEach((userData, index) => {
+
+            if (this._id == userData._id) {
+
+                users.splice(index, 1)
+
+            }
+
+        });
+
+        localStorage.setItem("users", JSON.stringify(users));
+
+    }
 
 }

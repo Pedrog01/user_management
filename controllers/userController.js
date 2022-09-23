@@ -9,8 +9,10 @@ class UserController {
         this.onSubmit();
         this.onEdit();
         this.selectAll();
+
     }
-onEdit(){
+
+    onEdit(){
 
         document.querySelector("#box-user-update .btn-cancel").addEventListener("click", e => {
 
@@ -70,6 +72,7 @@ onEdit(){
         });
 
     }
+
     onSubmit(){
 
         this.formEl.addEventListener("submit", event => {
@@ -89,7 +92,7 @@ onEdit(){
 
                     values.photo = content;
 
-                   values.save();
+                    values.save();
 
                     this.addLine(values);
 
@@ -194,57 +197,39 @@ onEdit(){
 
     }
 
-
-    getUsersStorage(){
-
-
-        let users = [];
-
-        if(localStorage.getItem("users")){
-
-            users = JSON.parse(localStorage.getItem("users"));
-        }
-            return users;
-
-    }
-
-    selectAll(){
-
-        let users = this.getUsersStorage()
-
-        users.forEach(dataUser =>{
+    selectAll() {
+       
+        let users = User.getUsersStorage();
+        
+        users.forEach(dataUser => {
 
             let user = new User();
 
             user.loadFromJSON(dataUser);
-
+        
             this.addLine(user);
 
         });
 
     }
-
-    // ele adiciona uma nova linha na tabela.
+    
     addLine(dataUser) {
 
-       let tr =  this.getTr(dataUser);
-       
+        let tr = this.getTr(dataUser);
+
         this.tableEl.appendChild(tr);
 
         this.updateCount();
 
     }
 
-
-    // ele seleciona a tr que a gente vai gerar.
-    getTr(dataUser, tr = null){
+    getTr(dataUser, tr = null) {
 
         if (tr === null) tr = document.createElement('tr');
-        
+
         tr.dataset.user = JSON.stringify(dataUser);
 
         tr.innerHTML = `
-        <tr>
             <td><img src=${dataUser.photo} class="img-circle img-sm"></td>
             <td>${dataUser.name}</td>
             <td>${dataUser.email}</td>
@@ -254,27 +239,33 @@ onEdit(){
                 <button type="button" class="btn btn-primary btn-edit btn-xs btn-flat">Editar</button>
                 <button type="button" class="btn btn-danger btn-delete btn-xs btn-flat">Excluir</button>
             </td>
-        </tr>
-    `;
+        `;
 
-    this.addEventsTr(tr);
-        return tr;
-        
+        this.addEventsTr(tr);
+
+        return tr
+
     }
 
     addEventsTr(tr) {
 
-        tr.querySelector(".btn-delete").addEventListener("click", e => {
+        tr.querySelector(".btn-delete").addEventListener("click", (e) => {
 
-            if(confirm ("deseja realmente exluir?")){
+            if(confirm("Deseja relamente excluir?")) {
+
+                let user = new User();
+
+                user.loadFromJSON(JSON.parse(tr.dataset.user));
+
+                user.remove();
 
                 tr.remove();
+
                 this.updateCount();
 
             }
 
         });
-
 
         tr.querySelector(".btn-edit").addEventListener("click", e => {
 
@@ -310,9 +301,9 @@ onEdit(){
                     field.value = json[name];
                 }
 
-
             }
-            this.formUpdateEl.querySelector(".photo").src = json._photo;
+
+            this.formUpdateEl.querySelector(".photo").src = json._photo
             
             this.showPanelUpdate();
 
