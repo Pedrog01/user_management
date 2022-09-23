@@ -49,6 +49,8 @@ onEdit(){
 
                     user.loadFromJSON(result);
 
+                    user.save();
+
                     this.getTr(user, tr);
 
                     this.updateCount();
@@ -87,7 +89,7 @@ onEdit(){
 
                     values.photo = content;
 
-                    this.insert(values);
+                   values.save();
 
                     this.addLine(values);
 
@@ -219,18 +221,6 @@ onEdit(){
             this.addLine(user);
 
         });
-
-    }
-
-    insert(data){
-
-        let users = this.getUsersStorage()
-
-        users.push(data);
-
-        //sessionStorage.setItem("users",JSON.stringify(users));
-
-        localStorage.setItem("users",JSON.stringify(users));
 
     }
 
