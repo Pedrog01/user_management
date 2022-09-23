@@ -65,7 +65,7 @@ class UserController {
 
                 }, 
                 (e) => {
-                    console.error(e)
+                    console.error(e);
                 }
             );
 

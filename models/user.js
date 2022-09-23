@@ -82,7 +82,7 @@ class User {
 
         }
 
-        return users
+        return users;
 
     }
 
